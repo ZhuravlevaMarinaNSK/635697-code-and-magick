@@ -61,7 +61,7 @@ window.renderStatistics = function (ctx, players, times) {
       PLAYER_COLOR = 'rgba(255, 0, 0, 1)';
     } else {
       PLAYER_COLOR = 'hsl(244, ' + saturate + '%, 28%)';
-    };
+    }
     ctx.fillStyle = PLAYER_COLOR;
     ctx.fillRect(CLOUD_X + GISTO_GAP + (GISTO_GAP + BAR_WIDTH) * i, CLOUD_Y + GISTO_GAP + FONT_SIZE, BAR_WIDTH, barHeight);
 
@@ -70,7 +70,7 @@ window.renderStatistics = function (ctx, players, times) {
     ctx.fillStyle = '#000';
     ctx.fillText(players[i], CLOUD_X + GISTO_GAP + (GISTO_GAP + BAR_WIDTH) * i, CLOUD_Y + GISTO_GAP_Y * 2 + barHeight);
     ctx.fillText(Math.round(times[i]), CLOUD_X + GISTO_GAP + (GISTO_GAP + BAR_WIDTH) * i, CLOUD_Y + GISTO_GAP_Y + FONT_SIZE + barHeight - (barHeight * times[i]) / maxTime);
-  };
-}
+  }
+};
 
 
