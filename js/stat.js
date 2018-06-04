@@ -16,15 +16,23 @@ var renderCloud = function (ctx, x, y, color) {
   ctx.fillStyle = color;
 
   ctx.beginPath();
-  ctx.moveTo(x, y);
-  ctx.lineTo(x + CLOUD_WIDTH - CLOUD_RADIUS, y);
-  ctx.arcTo(x + CLOUD_WIDTH, y, x + CLOUD_WIDTH, y + CLOUD_RADIUS, CLOUD_RADIUS);
-  ctx.lineTo(x + CLOUD_WIDTH, y + CLOUD_HEIGHT - CLOUD_RADIUS);
-  ctx.arcTo(x + CLOUD_WIDTH, y + CLOUD_HEIGHT, x + CLOUD_WIDTH - CLOUD_RADIUS, y + CLOUD_HEIGHT, CLOUD_RADIUS);
-  ctx.lineTo(x + CLOUD_RADIUS, y + CLOUD_HEIGHT);
-  ctx.arcTo(x, y + CLOUD_HEIGHT, x, y + CLOUD_HEIGHT - CLOUD_RADIUS, CLOUD_RADIUS);
-  ctx.lineTo(x, y + CLOUD_RADIUS);
-  ctx.arcTo(x, y, x + CLOUD_RADIUS, y, CLOUD_RADIUS);
+  ctx.moveTo(x, CLOUD_RADIUS);
+  ctx.bezierCurveTo(x, 0, (x + CLOUD_WIDTH) / 2 + CLOUD_RADIUS * 1.5, 0, (x + CLOUD_WIDTH) / 2 + CLOUD_RADIUS * 1.5, CLOUD_RADIUS);
+  ctx.bezierCurveTo((x + CLOUD_WIDTH) / 2 + CLOUD_RADIUS * 1.5, 0, x + CLOUD_WIDTH - CLOUD_RADIUS, 0, x + CLOUD_WIDTH - CLOUD_RADIUS, CLOUD_RADIUS);
+  ctx.bezierCurveTo(x + CLOUD_WIDTH, 0, x + CLOUD_WIDTH, CLOUD_HEIGHT / 2, x + CLOUD_WIDTH - CLOUD_RADIUS, CLOUD_HEIGHT / 2);
+  ctx.bezierCurveTo(x + CLOUD_WIDTH, CLOUD_HEIGHT / 2, x + CLOUD_WIDTH, CLOUD_HEIGHT, x + CLOUD_WIDTH + CLOUD_RADIUS, CLOUD_HEIGHT);
+  ctx.bezierCurveTo(x + CLOUD_WIDTH + CLOUD_RADIUS, CLOUD_HEIGHT + CLOUD_RADIUS, (x + CLOUD_WIDTH) / 2 + CLOUD_RADIUS * 1.5, CLOUD_HEIGHT + CLOUD_RADIUS, (x + CLOUD_WIDTH) / 2 + CLOUD_RADIUS * 1.5, CLOUD_HEIGHT);
+  ctx.bezierCurveTo((x + CLOUD_WIDTH) / 2 + CLOUD_RADIUS * 1.5, CLOUD_HEIGHT + CLOUD_RADIUS, x - CLOUD_RADIUS, CLOUD_HEIGHT + CLOUD_RADIUS, x - CLOUD_RADIUS, CLOUD_HEIGHT);
+  ctx.bezierCurveTo(x, CLOUD_HEIGHT, x, CLOUD_HEIGHT / 2, x + CLOUD_RADIUS, CLOUD_HEIGHT / 2);
+  ctx.bezierCurveTo(x, CLOUD_HEIGHT / 2, x, CLOUD_RADIUS, x + CLOUD_RADIUS, CLOUD_RADIUS);
+  //ctx.lineTo(x + CLOUD_WIDTH - CLOUD_RADIUS, y);
+  //ctx.arcTo(x + CLOUD_WIDTH, y, x + CLOUD_WIDTH, y + CLOUD_RADIUS, CLOUD_RADIUS);
+  //ctx.lineTo(x + CLOUD_WIDTH, y + CLOUD_HEIGHT - CLOUD_RADIUS);
+ // ctx.arcTo(x + CLOUD_WIDTH, y + CLOUD_HEIGHT, x + CLOUD_WIDTH - CLOUD_RADIUS, y + CLOUD_HEIGHT, CLOUD_RADIUS);
+  //ctx.lineTo(x + CLOUD_RADIUS, y + CLOUD_HEIGHT);
+  //ctx.arcTo(x, y + CLOUD_HEIGHT, x, y + CLOUD_HEIGHT - CLOUD_RADIUS, CLOUD_RADIUS);
+  //ctx.lineTo(x, y + CLOUD_RADIUS);
+ // ctx.arcTo(x, y, x + CLOUD_RADIUS, y, CLOUD_RADIUS);
   ctx.fill();
 };
 
@@ -52,24 +60,26 @@ window.renderStatistics = function (ctx, players, times) {
 
   var maxTime = getMaxElement(times);
 
+  var createGisto = function (number, times) {
+    ctx.fillStyle = PLAYER_COLOR;
+    ctx.fillRect(CLOUD_X + GISTO_GAP + (GISTO_GAP + BAR_WIDTH) * number, CLOUD_Y + GISTO_GAP + FONT_SIZE, BAR_WIDTH, barHeight);
+
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(CLOUD_X + GISTO_GAP + (GISTO_GAP + BAR_WIDTH) * number, CLOUD_Y + GISTO_GAP + FONT_SIZE, BAR_WIDTH, (barHeight - (barHeight * times[number]) / maxTime));
+    ctx.fillStyle = '#000';
+    ctx.fillText(players[number], CLOUD_X + GISTO_GAP + (GISTO_GAP + BAR_WIDTH) * number, CLOUD_Y + GISTO_GAP_Y * 2 + barHeight);
+    ctx.fillText(Math.round(times[i]), CLOUD_X + GISTO_GAP + (GISTO_GAP + BAR_WIDTH) * number, CLOUD_Y + GISTO_GAP_Y + FONT_SIZE + barHeight - (barHeight * times[number]) / maxTime);
+  };
 
   for (var i = 0; i < players.length; i++) {
-    var randomSaturate = Math.random() * 100;
-    var saturate = randomSaturate.toString();
+    var randomSaturate = (Math.random() * 100).toString();
     var PLAYER_COLOR;
     if (players[i] === 'Вы') {
       PLAYER_COLOR = 'rgba(255, 0, 0, 1)';
     } else {
-      PLAYER_COLOR = 'hsl(244, ' + saturate + '%, 28%)';
+      PLAYER_COLOR = 'hsl(230, ' + randomSaturate + '%, 36%)';
     }
-    ctx.fillStyle = PLAYER_COLOR;
-    ctx.fillRect(CLOUD_X + GISTO_GAP + (GISTO_GAP + BAR_WIDTH) * i, CLOUD_Y + GISTO_GAP + FONT_SIZE, BAR_WIDTH, barHeight);
-
-    ctx.fillStyle = '#fff';
-    ctx.fillRect(CLOUD_X + GISTO_GAP + (GISTO_GAP + BAR_WIDTH) * i, CLOUD_Y + GISTO_GAP + FONT_SIZE, BAR_WIDTH, (barHeight - (barHeight * times[i]) / maxTime));
-    ctx.fillStyle = '#000';
-    ctx.fillText(players[i], CLOUD_X + GISTO_GAP + (GISTO_GAP + BAR_WIDTH) * i, CLOUD_Y + GISTO_GAP_Y * 2 + barHeight);
-    ctx.fillText(Math.round(times[i]), CLOUD_X + GISTO_GAP + (GISTO_GAP + BAR_WIDTH) * i, CLOUD_Y + GISTO_GAP_Y + FONT_SIZE + barHeight - (barHeight * times[i]) / maxTime);
+    createGisto(i, times);
   }
 };
 
