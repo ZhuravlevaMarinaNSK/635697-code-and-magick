@@ -25,14 +25,14 @@ var renderCloud = function (ctx, x, y, color) {
   ctx.bezierCurveTo((x + CLOUD_WIDTH) / 2 + CLOUD_RADIUS * 1.5, CLOUD_HEIGHT + CLOUD_RADIUS, x - CLOUD_RADIUS, CLOUD_HEIGHT + CLOUD_RADIUS, x - CLOUD_RADIUS, CLOUD_HEIGHT);
   ctx.bezierCurveTo(x, CLOUD_HEIGHT, x, CLOUD_HEIGHT / 2, x + CLOUD_RADIUS, CLOUD_HEIGHT / 2);
   ctx.bezierCurveTo(x, CLOUD_HEIGHT / 2, x, CLOUD_RADIUS, x + CLOUD_RADIUS, CLOUD_RADIUS);
-  //ctx.lineTo(x + CLOUD_WIDTH - CLOUD_RADIUS, y);
-  //ctx.arcTo(x + CLOUD_WIDTH, y, x + CLOUD_WIDTH, y + CLOUD_RADIUS, CLOUD_RADIUS);
-  //ctx.lineTo(x + CLOUD_WIDTH, y + CLOUD_HEIGHT - CLOUD_RADIUS);
- // ctx.arcTo(x + CLOUD_WIDTH, y + CLOUD_HEIGHT, x + CLOUD_WIDTH - CLOUD_RADIUS, y + CLOUD_HEIGHT, CLOUD_RADIUS);
-  //ctx.lineTo(x + CLOUD_RADIUS, y + CLOUD_HEIGHT);
-  //ctx.arcTo(x, y + CLOUD_HEIGHT, x, y + CLOUD_HEIGHT - CLOUD_RADIUS, CLOUD_RADIUS);
-  //ctx.lineTo(x, y + CLOUD_RADIUS);
- // ctx.arcTo(x, y, x + CLOUD_RADIUS, y, CLOUD_RADIUS);
+  // ctx.lineTo(x + CLOUD_WIDTH - CLOUD_RADIUS, y);
+  // ctx.arcTo(x + CLOUD_WIDTH, y, x + CLOUD_WIDTH, y + CLOUD_RADIUS, CLOUD_RADIUS);
+  // ctx.lineTo(x + CLOUD_WIDTH, y + CLOUD_HEIGHT - CLOUD_RADIUS);
+  // ctx.arcTo(x + CLOUD_WIDTH, y + CLOUD_HEIGHT, x + CLOUD_WIDTH - CLOUD_RADIUS, y + CLOUD_HEIGHT, CLOUD_RADIUS);
+  // ctx.lineTo(x + CLOUD_RADIUS, y + CLOUD_HEIGHT);
+  // ctx.arcTo(x, y + CLOUD_HEIGHT, x, y + CLOUD_HEIGHT - CLOUD_RADIUS, CLOUD_RADIUS);
+  // ctx.lineTo(x, y + CLOUD_RADIUS);
+  // ctx.arcTo(x, y, x + CLOUD_RADIUS, y, CLOUD_RADIUS);
   ctx.fill();
 };
 
@@ -60,15 +60,15 @@ window.renderStatistics = function (ctx, players, times) {
 
   var maxTime = getMaxElement(times);
 
-  var createGisto = function (number, times) {
+  var createGisto = function (number, hours) {
     ctx.fillStyle = PLAYER_COLOR;
     ctx.fillRect(CLOUD_X + GISTO_GAP + (GISTO_GAP + BAR_WIDTH) * number, CLOUD_Y + GISTO_GAP + FONT_SIZE, BAR_WIDTH, barHeight);
 
     ctx.fillStyle = '#fff';
-    ctx.fillRect(CLOUD_X + GISTO_GAP + (GISTO_GAP + BAR_WIDTH) * number, CLOUD_Y + GISTO_GAP + FONT_SIZE, BAR_WIDTH, (barHeight - (barHeight * times[number]) / maxTime));
+    ctx.fillRect(CLOUD_X + GISTO_GAP + (GISTO_GAP + BAR_WIDTH) * number, CLOUD_Y + GISTO_GAP + FONT_SIZE, BAR_WIDTH, (barHeight - (barHeight * hours[number]) / maxTime));
     ctx.fillStyle = '#000';
     ctx.fillText(players[number], CLOUD_X + GISTO_GAP + (GISTO_GAP + BAR_WIDTH) * number, CLOUD_Y + GISTO_GAP_Y * 2 + barHeight);
-    ctx.fillText(Math.round(times[i]), CLOUD_X + GISTO_GAP + (GISTO_GAP + BAR_WIDTH) * number, CLOUD_Y + GISTO_GAP_Y + FONT_SIZE + barHeight - (barHeight * times[number]) / maxTime);
+    ctx.fillText(Math.round(hours[i]), CLOUD_X + GISTO_GAP + (GISTO_GAP + BAR_WIDTH) * number, CLOUD_Y + GISTO_GAP_Y + FONT_SIZE + barHeight - (barHeight * hours[number]) / maxTime);
   };
 
   for (var i = 0; i < players.length; i++) {
