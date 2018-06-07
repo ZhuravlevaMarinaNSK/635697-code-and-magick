@@ -25,14 +25,6 @@ var renderCloud = function (ctx, x, y, color) {
   ctx.bezierCurveTo((x + CLOUD_WIDTH) / 2 + CLOUD_RADIUS * 1.5, CLOUD_HEIGHT + CLOUD_RADIUS, x - CLOUD_RADIUS, CLOUD_HEIGHT + CLOUD_RADIUS, x - CLOUD_RADIUS, CLOUD_HEIGHT);
   ctx.bezierCurveTo(x, CLOUD_HEIGHT, x, CLOUD_HEIGHT / 2, x + CLOUD_RADIUS, CLOUD_HEIGHT / 2);
   ctx.bezierCurveTo(x, CLOUD_HEIGHT / 2, x, CLOUD_RADIUS, x + CLOUD_RADIUS, CLOUD_RADIUS);
-  // ctx.lineTo(x + CLOUD_WIDTH - CLOUD_RADIUS, y);
-  // ctx.arcTo(x + CLOUD_WIDTH, y, x + CLOUD_WIDTH, y + CLOUD_RADIUS, CLOUD_RADIUS);
-  // ctx.lineTo(x + CLOUD_WIDTH, y + CLOUD_HEIGHT - CLOUD_RADIUS);
-  // ctx.arcTo(x + CLOUD_WIDTH, y + CLOUD_HEIGHT, x + CLOUD_WIDTH - CLOUD_RADIUS, y + CLOUD_HEIGHT, CLOUD_RADIUS);
-  // ctx.lineTo(x + CLOUD_RADIUS, y + CLOUD_HEIGHT);
-  // ctx.arcTo(x, y + CLOUD_HEIGHT, x, y + CLOUD_HEIGHT - CLOUD_RADIUS, CLOUD_RADIUS);
-  // ctx.lineTo(x, y + CLOUD_RADIUS);
-  // ctx.arcTo(x, y, x + CLOUD_RADIUS, y, CLOUD_RADIUS);
   ctx.fill();
 };
 
@@ -82,5 +74,3 @@ window.renderStatistics = function (ctx, players, times) {
     createGisto(i, times);
   }
 };
-
-
