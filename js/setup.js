@@ -4,11 +4,11 @@ var WIZARD_NAMES = ['Иван', 'Хуан Себастьян', 'Мария', 'К
 
 var WIZARD_SURNAMES = ['да Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'];
 
-var COAT_COLOR = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)', 'rgb(215, 210, 55)', 'rgb(0, 0, 0)'];
+var COAT_COLORS = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)', 'rgb(215, 210, 55)', 'rgb(0, 0, 0)'];
 
-var EYES_COLOR = ['black', 'red', 'blue', 'yellow', 'green'];
+var EYES_COLORS = ['black', 'red', 'blue', 'yellow', 'green'];
 
-var FIREBALL_COLOR = ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848'];
+var FIREBALL_COLORS = ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848'];
 
 var NUMBER_OF_WIZARDS = 4;
 
@@ -34,8 +34,8 @@ var getRandomItem = function (array) {
 for (var j = 0; j < NUMBER_OF_WIZARDS; j++) {
   wizards[j] = {
     name: WIZARD_NAMES[getRandom(0, WIZARD_NAMES.length - 1)] + ' ' + WIZARD_SURNAMES[getRandom(0, WIZARD_SURNAMES.length - 1)],
-    coatColor: COAT_COLOR[getRandom(0, COAT_COLOR.length - 1)],
-    eyesColor: EYES_COLOR[getRandom(0, EYES_COLOR.length - 1)],
+    coatColor: COAT_COLORS[getRandom(0, COAT_COLORS.length - 1)],
+    eyesColor: EYES_COLORS[getRandom(0, EYES_COLORS.length - 1)],
   };
 }
 
@@ -70,8 +70,9 @@ var onCoatClick = function (evt) {
   var target = evt.target;
 
   if (target.classList.contains('wizard-coat')) {
-    var color = getRandomItem(COAT_COLOR);
+    var color = getRandomItem(COAT_COLORS);
     target.style.fill = color;
+    setupPlayer.querySelector('[name="coat-color"]').value = color;
   }
 };
 
@@ -79,8 +80,9 @@ var onEyesClick = function (evt) {
   var target = evt.target;
 
   if (target.classList.contains('wizard-eyes')) {
-    var color = getRandomItem(EYES_COLOR);
+    var color = getRandomItem(EYES_COLORS);
     target.style.fill = color;
+    setupPlayer.querySelector('[name="eyes-color"]').value = color;
   }
 };
 
@@ -88,9 +90,9 @@ var onFireballClick = function (evt) {
   var target = evt.target;
 
   if (target.classList.contains('setup-fireball')) {
-    var color = getRandomItem(FIREBALL_COLOR);
-
+    var color = getRandomItem(FIREBALL_COLORS);
     element.style.backgroundColor = color;
+    setupPlayer.querySelector('[name="fireball-color"]').value = color;
   }
 };
 
@@ -138,7 +140,7 @@ setupClose.addEventListener('keydown', function (evt) {
 
 var userNameInput = setup.querySelector('.setup-user-name');
 
-userNameInput.addEventListener('invalid', function (evt) {
+userNameInput.addEventListener('invalid', function () {
   if (userNameInput.validity.tooShort) {
     userNameInput.setCustomValidity('Имя должно состоять минимум из 2-х символов');
   } else if (userNameInput.validity.tooLong) {
