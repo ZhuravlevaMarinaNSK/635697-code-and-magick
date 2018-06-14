@@ -8,6 +8,8 @@ var COAT_COLOR = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)
 
 var EYES_COLOR = ['black', 'red', 'blue', 'yellow', 'green'];
 
+var FIREBALL_COLOR = ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848'];
+
 var NUMBER_OF_WIZARDS = 4;
 
 var userDialog = document.querySelector('.setup');
@@ -22,6 +24,11 @@ var similarWizardTemplate = document.querySelector('#similar-wizard-template')
 var wizards = [];
 var getRandom = function (min, max) {
   return Math.floor(Math.random() * (max + 1 - min) + min);
+};
+
+var getRandomItem = function (array) {
+  var item = Math.floor(Math.random() * (array.length + 1));
+  return array[item];
 };
 
 for (var j = 0; j < NUMBER_OF_WIZARDS; j++) {
@@ -49,3 +56,105 @@ for (var i = 0; i < wizards.length; i++) {
 similarListElement.appendChild(fragment);
 
 userDialog.querySelector('.setup-similar').classList.remove('hidden');
+
+var setup = document.querySelector('.setup');
+var setupOpen = document.querySelector('.setup-open');
+var setupClose = setup.querySelector('.setup-close');
+var setupPlayer = setup.querySelector('.setup-player');
+var element = document.querySelector('.setup-fireball-wrap');
+
+var ESC_KEYCODE = 27;
+var ENTER_KEYCODE = 13;
+
+var onCoatClick = function (evt) {
+  var target = evt.target;
+
+  if (target.classList.contains('wizard-coat')) {
+    var color = getRandomItem(COAT_COLOR);
+    target.style.fill = color;
+  }
+};
+
+var onEyesClick = function (evt) {
+  var target = evt.target;
+
+  if (target.classList.contains('wizard-eyes')) {
+    var color = getRandomItem(EYES_COLOR);
+    target.style.fill = color;
+  }
+};
+
+var onFireballClick = function (evt) {
+  var target = evt.target;
+
+  if (target.classList.contains('setup-fireball')) {
+    var color = getRandomItem(FIREBALL_COLOR);
+
+    element.style.backgroundColor = color;
+  }
+};
+
+var onPopupEscPress = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE && !evt.target.matches('[name="username"]')) {
+    closePopup();
+  }
+};
+
+var openPopup = function () {
+  setup.classList.remove('hidden');
+  document.addEventListener('keydown', onPopupEscPress);
+  setupPlayer.addEventListener('click', onCoatClick);
+  setupPlayer.addEventListener('click', onEyesClick);
+  setupPlayer.addEventListener('click', onFireballClick);
+};
+
+var closePopup = function () {
+  setup.classList.add('hidden');
+  document.removeEventListener('keydown', onPopupEscPress);
+  setupPlayer.removeEventListener('click', onCoatClick);
+  setupPlayer.removeEventListener('click', onEyesClick);
+  setupPlayer.removeEventListener('click', onFireballClick);
+};
+
+setupOpen.addEventListener('click', function () {
+  openPopup();
+});
+
+setupOpen.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    openPopup();
+  }
+});
+
+setupClose.addEventListener('click', function () {
+  closePopup();
+});
+
+setupClose.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    closePopup();
+  }
+});
+
+var userNameInput = setup.querySelector('.setup-user-name');
+
+userNameInput.addEventListener('invalid', function (evt) {
+  if (userNameInput.validity.tooShort) {
+    userNameInput.setCustomValidity('Имя должно состоять минимум из 2-х символов');
+  } else if (userNameInput.validity.tooLong) {
+    userNameInput.setCustomValidity('Имя не должно превышать 25-ти символов');
+  } else if (userNameInput.validity.valueMissing) {
+    userNameInput.setCustomValidity('Обязательное поле');
+  } else {
+    userNameInput.setCustomValidity('');
+  }
+});
+
+userNameInput.addEventListener('input', function (evt) {
+  var target = evt.target;
+  if (target.value.length < 2) {
+    target.setCustomValidity('Имя должно состоять минимум из 2-х символов');
+  } else {
+    target.setCustomValidity('');
+  }
+});
