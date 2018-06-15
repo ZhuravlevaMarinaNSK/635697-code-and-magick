@@ -13,7 +13,7 @@ var FIREBALL_COLORS = ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848'];
 var NUMBER_OF_WIZARDS = 4;
 
 var userDialog = document.querySelector('.setup');
-userDialog.classList.remove('hidden');
+
 
 var similarListElement = userDialog.querySelector('.setup-similar-list');
 
@@ -66,33 +66,20 @@ var element = document.querySelector('.setup-fireball-wrap');
 var ESC_KEYCODE = 27;
 var ENTER_KEYCODE = 13;
 
-var onCoatClick = function (evt) {
+var onItemClick = function (evt) {
   var target = evt.target;
-
   if (target.classList.contains('wizard-coat')) {
-    var color = getRandomItem(COAT_COLORS);
-    target.style.fill = color;
-    setupPlayer.querySelector('[name="coat-color"]').value = color;
-  }
-};
-
-var onEyesClick = function (evt) {
-  var target = evt.target;
-
-  if (target.classList.contains('wizard-eyes')) {
-    var color = getRandomItem(EYES_COLORS);
-    target.style.fill = color;
-    setupPlayer.querySelector('[name="eyes-color"]').value = color;
-  }
-};
-
-var onFireballClick = function (evt) {
-  var target = evt.target;
-
-  if (target.classList.contains('setup-fireball')) {
-    var color = getRandomItem(FIREBALL_COLORS);
-    element.style.backgroundColor = color;
-    setupPlayer.querySelector('[name="fireball-color"]').value = color;
+    var coatColor = getRandomItem(COAT_COLORS);
+    target.style.fill = coatColor;
+    setupPlayer.querySelector('[name="coat-color"]').value = coatColor;
+  } else if (target.classList.contains('wizard-eyes')) {
+    var eyesColor = getRandomItem(EYES_COLORS);
+    target.style.fill = eyesColor;
+    setupPlayer.querySelector('[name="eyes-color"]').value = eyesColor;
+  } else if (target.classList.contains('setup-fireball')) {
+    var fireballColor = getRandomItem(FIREBALL_COLORS);
+    element.style.backgroundColor = fireballColor;
+    setupPlayer.querySelector('[name="fireball-color"]').value = fireballColor;
   }
 };
 
@@ -105,17 +92,13 @@ var onPopupEscPress = function (evt) {
 var openPopup = function () {
   setup.classList.remove('hidden');
   document.addEventListener('keydown', onPopupEscPress);
-  setupPlayer.addEventListener('click', onCoatClick);
-  setupPlayer.addEventListener('click', onEyesClick);
-  setupPlayer.addEventListener('click', onFireballClick);
+  setupPlayer.addEventListener('click', onItemClick);
 };
 
 var closePopup = function () {
   setup.classList.add('hidden');
   document.removeEventListener('keydown', onPopupEscPress);
-  setupPlayer.removeEventListener('click', onCoatClick);
-  setupPlayer.removeEventListener('click', onEyesClick);
-  setupPlayer.removeEventListener('click', onFireballClick);
+  setupPlayer.removeEventListener('click', onItemClick);
 };
 
 setupOpen.addEventListener('click', function () {
