@@ -27,7 +27,7 @@ var getRandom = function (min, max) {
 };
 
 var getRandomItem = function (array) {
-  var item = Math.floor(Math.random() * (array.length + 1));
+  var item = Math.floor(Math.random() * array.length);
   return array[item];
 };
 
@@ -66,20 +66,24 @@ var element = document.querySelector('.setup-fireball-wrap');
 var ESC_KEYCODE = 27;
 var ENTER_KEYCODE = 13;
 
+var setColor = function (identificator, colorArray, el, isFireball) {
+  var color = getRandomItem(colorArray);
+  setupPlayer.querySelector(identificator).value = color;
+  if (!isFireball) {
+    el.style.fill = color;
+  } else {
+    el.style.backgroundColor = color;
+  }
+};
+
 var onItemClick = function (evt) {
   var target = evt.target;
   if (target.classList.contains('wizard-coat')) {
-    var coatColor = getRandomItem(COAT_COLORS);
-    target.style.fill = coatColor;
-    setupPlayer.querySelector('[name="coat-color"]').value = coatColor;
+    setColor('[name="coat-color"]', COAT_COLORS, target);
   } else if (target.classList.contains('wizard-eyes')) {
-    var eyesColor = getRandomItem(EYES_COLORS);
-    target.style.fill = eyesColor;
-    setupPlayer.querySelector('[name="eyes-color"]').value = eyesColor;
+    setColor('[name="eyes-color"]', EYES_COLORS, target);
   } else if (target.classList.contains('setup-fireball')) {
-    var fireballColor = getRandomItem(FIREBALL_COLORS);
-    element.style.backgroundColor = fireballColor;
-    setupPlayer.querySelector('[name="fireball-color"]').value = fireballColor;
+    setColor('[name="fireball-color"]', FIREBALL_COLORS, element, true);
   }
 };
 
