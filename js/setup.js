@@ -67,6 +67,7 @@ var element = document.querySelector('.setup-fireball-wrap');
 var ESC_KEYCODE = 27;
 var ENTER_KEYCODE = 13;
 
+
 var setColor = function (identificator, colorArray, el, isFireball) {
   var color = getRandomItem(colorArray);
   setupPlayer.querySelector(identificator).value = color;
@@ -101,6 +102,13 @@ var openPopup = function () {
   document.addEventListener('keydown', onPopupEscPress);
   setupPlayer.addEventListener('click', onItemClick);
   star.addEventListener('mousedown', onStarMousemove);
+  setupOpen.removeEventListener('keydown', onSetupKeydown);
+  setupOpen.removeEventListener('click', onSetupClick);
+  setupClose.addEventListener('click', onSetupCloseClick);
+  setupClose.addEventListener('keydown', onSetupCloseKeydown);
+  userNameInput.addEventListener('invalid', onUserNameInputInvalid);
+  userNameInput.addEventListener('input', onUserNameInput);
+  onDialogMousemove.addEventListener('mousedown', onDialogMousedown);
 };
 
 var closePopup = function () {
@@ -109,31 +117,41 @@ var closePopup = function () {
   setupPlayer.removeEventListener('click', onItemClick);
   star.removeEventListener('mousedown', onStarMousemove);
   returnUserDialogPosition();
+  setupOpen.addEventListener('keydown', onSetupKeydown);
+  setupOpen.addEventListener('click', onSetupClick);
+  setupClose.removeEventListener('click', onSetupCloseClick);
+  setupClose.removeEventListener('keydown', onSetupCloseKeydown);
+  userNameInput.removeEventListener('invalid', onUserNameInputInvalid);
+  userNameInput.removeEventListener('input', onUserNameInput);
+  onDialogMousemove.removeEventListener('mousedown', onDialogMousedown);
 };
 
-setupOpen.addEventListener('click', function () {
+var onSetupClick = function () {
   openPopup();
-});
+};
 
-setupOpen.addEventListener('keydown', function (evt) {
+var onSetupKeydown = function (evt) {
   if (evt.keyCode === ENTER_KEYCODE) {
     openPopup();
   }
-});
+};
 
-setupClose.addEventListener('click', function () {
+setupOpen.addEventListener('keydown', onSetupKeydown);
+setupOpen.addEventListener('click', onSetupClick);
+
+var onSetupCloseClick = function () {
   closePopup();
-});
+};
 
-setupClose.addEventListener('keydown', function (evt) {
+var onSetupCloseKeydown = function (evt) {
   if (evt.keyCode === ENTER_KEYCODE) {
     closePopup();
   }
-});
+};
 
 var userNameInput = setup.querySelector('.setup-user-name');
 
-userNameInput.addEventListener('invalid', function () {
+var onUserNameInputInvalid = function () {
   if (userNameInput.validity.tooShort) {
     userNameInput.setCustomValidity('Имя должно состоять минимум из 2-х символов');
   } else if (userNameInput.validity.tooLong) {
@@ -143,19 +161,19 @@ userNameInput.addEventListener('invalid', function () {
   } else {
     userNameInput.setCustomValidity('');
   }
-});
+};
 
-userNameInput.addEventListener('input', function (evt) {
+var onUserNameInput = function (evt) {
   var target = evt.target;
   if (target.value.length < 2) {
     target.setCustomValidity('Имя должно состоять минимум из 2-х символов');
   } else {
     target.setCustomValidity('');
   }
-});
+};
 
 var TOP_EDGE = 0;
-var LEFT_EDGE = userDialog.offsetWidth / 2;
+var LEFT_EDGE = userDialog.offsetWidth * 2;
 var RIGHT_EDGE;
 var BOTTOM_EDGE;
 var beginX = userDialog.style.left;
@@ -166,7 +184,7 @@ var returnUserDialogPosition = function () {
   userDialog.style.top = beginY;
 };
 
-onDialogMousemove.addEventListener('mousedown', function (evt) {
+var onDialogMousedown = function (evt) {
   evt.preventDefault();
 
   var startCoords = {
@@ -217,8 +235,8 @@ onDialogMousemove.addEventListener('mousedown', function (evt) {
     document.removeEventListener('mouseup', onMouseUp);
 
     if (dragged) {
-      var onClickPreventDefault = function (evt) {
-        evt.preventDefault();
+      var onClickPreventDefault = function (event) {
+        event.preventDefault();
         onDialogMousemove.removeEventListener('click', onClickPreventDefault);
       };
       onDialogMousemove.addEventListener('click', onClickPreventDefault);
@@ -228,7 +246,7 @@ onDialogMousemove.addEventListener('mousedown', function (evt) {
 
   document.addEventListener('mousemove', onMouseMove);
   document.addEventListener('mouseup', onMouseUp);
-});
+};
 
 
 var shopDialog = userDialog.querySelector('.setup-artifacts-cell');
@@ -242,11 +260,6 @@ var onStarMousemove = function (evt) {
   var startCoords = {
     x: evt.clientX,
     y: evt.clientY
-  };
-
-  var oldCoords = {
-    x: star.offsetLeft,
-    y: star.offsetTop
   };
 
   var dragged = false;
@@ -284,16 +297,16 @@ var onStarMousemove = function (evt) {
       document.removeEventListener('mouseup', onMouseUp);
 
       if (dragged) {
-        var onClickPreventDefault = function (evt) {
-          evt.preventDefault();
+        var onClickPreventDefault = function (event) {
+          event.preventDefault();
           star.removeEventListener('click', onClickPreventDefault);
         };
         star.addEventListener('click', onClickPreventDefault);
       }
     } else {
-      // star.style.top = oldCoords.y + 'px';
-      // star.style.left = oldCoords.x + 'px';
       star.style.position = 'static';
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
     }
   };
 
