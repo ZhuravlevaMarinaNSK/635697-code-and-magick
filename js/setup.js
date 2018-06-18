@@ -13,6 +13,7 @@ var FIREBALL_COLORS = ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848'];
 var NUMBER_OF_WIZARDS = 4;
 
 var userDialog = document.querySelector('.setup');
+var onDialogMousemove = userDialog.querySelector('.upload');
 
 
 var similarListElement = userDialog.querySelector('.setup-similar-list');
@@ -66,6 +67,7 @@ var element = document.querySelector('.setup-fireball-wrap');
 var ESC_KEYCODE = 27;
 var ENTER_KEYCODE = 13;
 
+
 var setColor = function (identificator, colorArray, el, isFireball) {
   var color = getRandomItem(colorArray);
   setupPlayer.querySelector(identificator).value = color;
@@ -95,39 +97,61 @@ var onPopupEscPress = function (evt) {
 
 var openPopup = function () {
   setup.classList.remove('hidden');
+  RIGHT_EDGE = document.body.offsetWidth - userDialog.offsetWidth / 2;
+  BOTTOM_EDGE = document.body.offsetHeight - userDialog.offsetHeight / 2;
   document.addEventListener('keydown', onPopupEscPress);
   setupPlayer.addEventListener('click', onItemClick);
+  star.addEventListener('mousedown', onStarMousemove);
+  setupOpen.removeEventListener('keydown', onSetupKeydown);
+  setupOpen.removeEventListener('click', onSetupClick);
+  setupClose.addEventListener('click', onSetupCloseClick);
+  setupClose.addEventListener('keydown', onSetupCloseKeydown);
+  userNameInput.addEventListener('invalid', onUserNameInputInvalid);
+  userNameInput.addEventListener('input', onUserNameInput);
+  onDialogMousemove.addEventListener('mousedown', onDialogMousedown);
 };
 
 var closePopup = function () {
   setup.classList.add('hidden');
   document.removeEventListener('keydown', onPopupEscPress);
   setupPlayer.removeEventListener('click', onItemClick);
+  star.removeEventListener('mousedown', onStarMousemove);
+  returnUserDialogPosition();
+  setupOpen.addEventListener('keydown', onSetupKeydown);
+  setupOpen.addEventListener('click', onSetupClick);
+  setupClose.removeEventListener('click', onSetupCloseClick);
+  setupClose.removeEventListener('keydown', onSetupCloseKeydown);
+  userNameInput.removeEventListener('invalid', onUserNameInputInvalid);
+  userNameInput.removeEventListener('input', onUserNameInput);
+  onDialogMousemove.removeEventListener('mousedown', onDialogMousedown);
 };
 
-setupOpen.addEventListener('click', function () {
+var onSetupClick = function () {
   openPopup();
-});
+};
 
-setupOpen.addEventListener('keydown', function (evt) {
+var onSetupKeydown = function (evt) {
   if (evt.keyCode === ENTER_KEYCODE) {
     openPopup();
   }
-});
+};
 
-setupClose.addEventListener('click', function () {
+setupOpen.addEventListener('keydown', onSetupKeydown);
+setupOpen.addEventListener('click', onSetupClick);
+
+var onSetupCloseClick = function () {
   closePopup();
-});
+};
 
-setupClose.addEventListener('keydown', function (evt) {
+var onSetupCloseKeydown = function (evt) {
   if (evt.keyCode === ENTER_KEYCODE) {
     closePopup();
   }
-});
+};
 
 var userNameInput = setup.querySelector('.setup-user-name');
 
-userNameInput.addEventListener('invalid', function () {
+var onUserNameInputInvalid = function () {
   if (userNameInput.validity.tooShort) {
     userNameInput.setCustomValidity('Имя должно состоять минимум из 2-х символов');
   } else if (userNameInput.validity.tooLong) {
@@ -137,13 +161,196 @@ userNameInput.addEventListener('invalid', function () {
   } else {
     userNameInput.setCustomValidity('');
   }
-});
+};
 
-userNameInput.addEventListener('input', function (evt) {
+var onUserNameInput = function (evt) {
   var target = evt.target;
   if (target.value.length < 2) {
     target.setCustomValidity('Имя должно состоять минимум из 2-х символов');
   } else {
     target.setCustomValidity('');
   }
-});
+};
+
+var TOP_EDGE = 0;
+var LEFT_EDGE = userDialog.offsetWidth * 2;
+var RIGHT_EDGE;
+var BOTTOM_EDGE;
+var beginX = userDialog.style.left;
+var beginY = userDialog.style.left;
+
+var returnUserDialogPosition = function () {
+  userDialog.style.left = beginX;
+  userDialog.style.top = beginY;
+};
+
+var onDialogMousedown = function (evt) {
+  evt.preventDefault();
+
+  var startCoords = {
+    x: evt.clientX,
+    y: evt.clientY
+  };
+
+  var dragged = false;
+
+  var onMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+    dragged = true;
+
+    var shift = {
+      x: startCoords.x - moveEvt.clientX,
+      y: startCoords.y - moveEvt.clientY
+    };
+
+    startCoords = {
+      x: moveEvt.clientX,
+      y: moveEvt.clientY
+    };
+
+    var currentX = userDialog.offsetLeft - shift.x;
+    var currentY = userDialog.offsetTop - shift.y;
+
+
+    if (currentY < TOP_EDGE) {
+      currentY = 0;
+    } else if (currentY > BOTTOM_EDGE) {
+      currentY = BOTTOM_EDGE;
+    }
+
+    if (currentX < LEFT_EDGE) {
+      currentX = 0;
+    } else if (currentX > RIGHT_EDGE) {
+      currentX = RIGHT_EDGE;
+    }
+
+    userDialog.style.top = currentY + 'px';
+    userDialog.style.left = currentX + 'px';
+  };
+
+  var onMouseUp = function (upEvt) {
+    upEvt.preventDefault();
+
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+
+    if (dragged) {
+      var onClickPreventDefault = function (event) {
+        event.preventDefault();
+        onDialogMousemove.removeEventListener('click', onClickPreventDefault);
+      };
+      onDialogMousemove.addEventListener('click', onClickPreventDefault);
+    }
+
+  };
+
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
+};
+
+
+var shopDialog = userDialog.querySelector('.setup-artifacts-cell');
+var star = shopDialog.querySelector('img');
+var playersBag = userDialog.querySelector('.setup-artifacts');
+var playersCell = playersBag.querySelector('.setup-artifacts-cell');
+
+var onStarMousemove = function (evt) {
+  evt.preventDefault();
+
+  var startCoords = {
+    x: evt.clientX,
+    y: evt.clientY
+  };
+
+  var dragged = false;
+
+  var onMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+    dragged = true;
+
+    var shift = {
+      x: startCoords.x - moveEvt.clientX,
+      y: startCoords.y - moveEvt.clientY
+    };
+
+    startCoords = {
+      x: moveEvt.clientX,
+      y: moveEvt.clientY
+    };
+
+    star.style.position = 'absolute';
+    star.style.zIndex = '100';
+    star.style.top = (star.offsetTop - shift.y) + 'px';
+    star.style.left = (star.offsetLeft - shift.x) + 'px';
+
+  };
+
+  var onMouseUp = function (upEvt) {
+    star.style.display = 'none';
+    var elem = document.elementFromPoint(event.clientX, event.clientY);
+    star.style.display = 'block';
+
+    if (elem === playersCell) {
+      upEvt.preventDefault();
+
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+
+      if (dragged) {
+        var onClickPreventDefault = function (event) {
+          event.preventDefault();
+          star.removeEventListener('click', onClickPreventDefault);
+        };
+        star.addEventListener('click', onClickPreventDefault);
+      }
+    } else {
+      star.style.position = 'static';
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    }
+  };
+
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
+
+};
+
+// // var shopDialog = userDialog.querySelector('.setup-artifacts-shop');
+// var cellShop = document.querySelector('.setup-artifacts');
+// var draggedItem;
+
+// shopDialog.addEventListener('dragstart', function (evt) {
+//   if (evt.target.closest('img')) {
+//     evt.dataTransfer.effectAllowed = 'move';
+//     evt.dataTransfer.setData('text/plain', evt.target.getAttribute('alt'));
+//     evt.dataTransfer.setDragImage(evt.target, 30, 25);
+//     draggedItem = evt.target;
+//   }
+// });
+
+// cellShop.addEventListener('dragover', function (evt) {
+//   evt.preventDefault();
+//   return false;
+// });
+
+// cellShop.addEventListener('drop', function (evt) {
+//   evt.target.style.opacity = '1';
+//   evt.target.appendChild(draggedItem);
+//   if (evt.stopPropagation) {
+//     evt.stopPropagation();
+//   }
+//   return false;
+// });
+
+// cellShop.addEventListener('dragenter', function (evt) {
+//   evt.target.style.opacity = '1';
+//   evt.preventDefault();
+//   return true;
+// });
+
+// cellShop.addEventListener('dragleave', function (evt) {
+//   evt.target.style.opacity = '0.5';
+//   evt.preventDefault();
+// });
+
+
