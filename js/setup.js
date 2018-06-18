@@ -96,16 +96,18 @@ var onPopupEscPress = function (evt) {
 
 var openPopup = function () {
   setup.classList.remove('hidden');
+  RIGHT_EDGE = document.body.offsetWidth - userDialog.offsetWidth / 2;
+  BOTTOM_EDGE = document.body.offsetHeight - userDialog.offsetHeight / 2;
   document.addEventListener('keydown', onPopupEscPress);
   setupPlayer.addEventListener('click', onItemClick);
-  userDialog.addEventListener('mousedown', onStarMousemove);
+  star.addEventListener('mousedown', onStarMousemove);
 };
 
 var closePopup = function () {
   setup.classList.add('hidden');
   document.removeEventListener('keydown', onPopupEscPress);
   setupPlayer.removeEventListener('click', onItemClick);
-  userDialog.removeEventListener('mousedown', onStarMousemove);
+  star.removeEventListener('mousedown', onStarMousemove);
   returnUserDialogPosition();
 };
 
@@ -153,9 +155,9 @@ userNameInput.addEventListener('input', function (evt) {
 });
 
 var TOP_EDGE = 0;
-var LEFT_EDGE = 0;
-var RIGHT_EDGE = document.body.offsetWidth - userDialog.offsetWidth;
-var BOTTOM_EDGE = document.body.offsetHeight - userDialog.offsetHeight;
+var LEFT_EDGE = userDialog.offsetWidth / 2;
+var RIGHT_EDGE;
+var BOTTOM_EDGE;
 var beginX = userDialog.style.left;
 var beginY = userDialog.style.left;
 
@@ -191,22 +193,21 @@ onDialogMousemove.addEventListener('mousedown', function (evt) {
     var currentX = userDialog.offsetLeft - shift.x;
     var currentY = userDialog.offsetTop - shift.y;
 
-    if (currentY >= TOP_EDGE && currentY <= BOTTOM_EDGE) {
-      userDialog.style.top = currentY + 'px';
-    } else if (currentY < TOP_EDGE) {
-      userDialog.style.top = 0 + 'px';
+
+    if (currentY < TOP_EDGE) {
+      currentY = 0;
     } else if (currentY > BOTTOM_EDGE) {
-      userDialog.style.top = BOTTOM_EDGE + 'px';
+      currentY = BOTTOM_EDGE;
     }
 
-    if (currentX >= LEFT_EDGE && currentX <= RIGHT_EDGE) {
-      userDialog.style.left = currentX + 'px';
-    } else if (currentX < LEFT_EDGE) {
-      userDialog.style.left = 0 + 'px';
+    if (currentX < LEFT_EDGE) {
+      currentX = 0;
     } else if (currentX > RIGHT_EDGE) {
-      userDialog.style.left = RIGHT_EDGE + 'px';
+      currentX = RIGHT_EDGE;
     }
 
+    userDialog.style.top = currentY + 'px';
+    userDialog.style.left = currentX + 'px';
   };
 
   var onMouseUp = function (upEvt) {
@@ -290,8 +291,9 @@ var onStarMousemove = function (evt) {
         star.addEventListener('click', onClickPreventDefault);
       }
     } else {
-      star.style.top = oldCoords.y + 'px';
-      star.style.left = oldCoords.x + 'px';
+      // star.style.top = oldCoords.y + 'px';
+      // star.style.left = oldCoords.x + 'px';
+      star.style.position = 'static';
     }
   };
 
