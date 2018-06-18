@@ -98,12 +98,14 @@ var openPopup = function () {
   setup.classList.remove('hidden');
   document.addEventListener('keydown', onPopupEscPress);
   setupPlayer.addEventListener('click', onItemClick);
+  // userDialog.addEventListener('mousedown', onStarMousemove);
 };
 
 var closePopup = function () {
   setup.classList.add('hidden');
   document.removeEventListener('keydown', onPopupEscPress);
   setupPlayer.removeEventListener('click', onItemClick);
+  // userDialog.removeEventListener('mousedown', onStarMousemove);
 };
 
 setupOpen.addEventListener('click', function () {
@@ -149,6 +151,10 @@ userNameInput.addEventListener('input', function (evt) {
   }
 });
 
+var TOP_EDGE = 0;
+var LEFT_EDGE = 0;
+var RIGHT_EDGE = 1200;
+var BOTTOM_EDGE = 600;
 
 onDialogMousemove.addEventListener('mousedown', function (evt) {
   evt.preventDefault();
@@ -177,21 +183,21 @@ onDialogMousemove.addEventListener('mousedown', function (evt) {
     var currentX = userDialog.offsetLeft - shift.x;
     var currentY = userDialog.offsetTop - shift.y;
 
-    if (currentX < 0) {
-      currentX = 0;
-    }
-    if (currentX > document.body.offsetWidth - userDialog.offsetWidth) {
-      currentX = document.body.offsetWidth - userDialog.offsetWidth;
-    }
-    if (currentY < 0) {
-      currentY = 0;
-    }
-    if (currentY > document.body.offsetHeight - userDialog.offsetHeight) {
-      currentY = document.body.offsetHeight - userDialog.offsetHeight;
+    if (currentY >= TOP_EDGE && currentY <= BOTTOM_EDGE) {
+      userDialog.style.top = currentY + 'px';
+    } else if (currentY < TOP_EDGE) {
+      userDialog.style.top = 0 + 'px';
+    } else if (currentY > BOTTOM_EDGE) {
+      userDialog.style.top = BOTTOM_EDGE + 'px';
     }
 
-    userDialog.style.top = currentX + 'px';
-    userDialog.style.left = currentY + 'px';
+    if (currentX >= LEFT_EDGE && currentX <= RIGHT_EDGE) {
+      userDialog.style.left = currentX + 'px';
+    } else if (currentX < LEFT_EDGE) {
+      userDialog.style.left = 0 + 'px';
+    } else if (currentX > RIGHT_EDGE) {
+      userDialog.style.left = RIGHT_EDGE + 'px';
+    }
 
   };
 
@@ -216,74 +222,75 @@ onDialogMousemove.addEventListener('mousedown', function (evt) {
 });
 
 
-var shopDialog = userDialog.querySelector('.setup-artifacts-cell');
-var star = shopDialog.querySelector('img');
-var playersBag = userDialog.querySelector('.setup-artifacts');
-var playersCell = playersBag.querySelector('.setup-artifacts-cell');
+// var shopDialog = userDialog.querySelector('.setup-artifacts-cell');
+// var star = shopDialog.querySelector('img');
+// var playersBag = userDialog.querySelector('.setup-artifacts');
+// var playersCell = playersBag.querySelector('.setup-artifacts-cell');
 
-userDialog.addEventListener('mousedown', function (evt) {
-  evt.preventDefault();
+// var onStarMousemove = function (evt) {
+//   evt.preventDefault();
 
-  var startCoords = {
-    x: evt.clientX,
-    y: evt.clientY
-  };
+//   var startCoords = {
+//     x: evt.clientX,
+//     y: evt.clientY
+//   };
 
-  var oldCoords = {
-    x: evt.clientX,
-    y: evt.clientY
-  };
+//   var oldCoords = {
+//     x: star.offsetLeft,
+//     y: star.offsetTop
+//   };
 
-  var dragged = false;
+//   var dragged = false;
 
-  var onMouseMove = function (moveEvt) {
-    moveEvt.preventDefault();
-    dragged = true;
+//   var onMouseMove = function (moveEvt) {
+//     moveEvt.preventDefault();
+//     dragged = true;
 
-    var shift = {
-      x: startCoords.x - moveEvt.clientX,
-      y: startCoords.y - moveEvt.clientY
-    };
+//     var shift = {
+//       x: startCoords.x - moveEvt.clientX,
+//       y: startCoords.y - moveEvt.clientY
+//     };
 
-    startCoords = {
-      x: moveEvt.clientX,
-      y: moveEvt.clientY
-    };
+//     startCoords = {
+//       x: moveEvt.clientX,
+//       y: moveEvt.clientY
+//     };
 
-    star.style.position = 'absolute';
-    star.style.zIndex = '100';
-    star.style.top = (star.offsetTop - shift.y) + 'px';
-    star.style.left = (star.offsetLeft - shift.x) + 'px';
+//     star.style.position = 'absolute';
+//     star.style.zIndex = '100';
+//     star.style.top = (star.offsetTop - shift.y) + 'px';
+//     star.style.left = (star.offsetLeft - shift.x) + 'px';
 
-  };
+//   };
 
-  var onMouseUp = function (upEvt) {
-    star.style.display = 'none';
-    var elem = document.elementFromPoint(event.clientX, event.clientY);
-    star.style.display = 'block';
-    if (elem === playersCell) {
-      upEvt.preventDefault();
+//   var onMouseUp = function (upEvt) {
+//     star.style.display = 'none';
+//     var elem = document.elementFromPoint(event.clientX, event.clientY);
+//     star.style.display = 'block';
 
-      document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseup', onMouseUp);
+//     if (elem === playersCell) {
+//       upEvt.preventDefault();
 
-      if (dragged) {
-        var onClickPreventDefault = function (evt) {
-          evt.preventDefault();
-          star.removeEventListener('click', onClickPreventDefault);
-        };
-        star.addEventListener('click', onClickPreventDefault);
-      }
-    } else {
-      star.style.top = (star.oldCoords.y) + 'px';
-      star.style.left = (star.oldCoords.x) + 'px';
-    }
-  };
+//       document.removeEventListener('mousemove', onMouseMove);
+//       document.removeEventListener('mouseup', onMouseUp);
 
-  document.addEventListener('mousemove', onMouseMove);
-  document.addEventListener('mouseup', onMouseUp);
+//       if (dragged) {
+//         var onClickPreventDefault = function (evt) {
+//           evt.preventDefault();
+//           star.removeEventListener('click', onClickPreventDefault);
+//         };
+//         star.addEventListener('click', onClickPreventDefault);
+//       }
+//     } else {
+//       star.style.top = oldCoords.y + 'px';
+//       star.style.left = oldCoords.x + 'px';
+//     }
+//   };
 
-});
+//   document.addEventListener('mousemove', onMouseMove);
+//   document.addEventListener('mouseup', onMouseUp);
+
+// };
 
 // // var shopDialog = userDialog.querySelector('.setup-artifacts-shop');
 // var cellShop = document.querySelector('.setup-artifacts');
