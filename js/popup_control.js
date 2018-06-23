@@ -8,14 +8,13 @@
   var userNameInput = setup.querySelector('.setup-user-name');
 
   var onPopupEscPress = function (evt) {
-    if (evt.keyCode === window.utils.Esc && !evt.target.matches('[name="username"]')) {
+    if (evt.keyCode === window.utils.EscKeycode && !evt.target.matches('[name="username"]')) {
       closePopup();
     }
   };
 
   var openPopup = function () {
     setup.classList.remove('hidden');
-
     document.addEventListener('keydown', onPopupEscPress);
     setupPlayer.addEventListener('click', window.onItemClick);
     setupOpen.removeEventListener('keydown', onSetupKeydown);
@@ -44,7 +43,7 @@
   };
 
   var onSetupKeydown = function (evt) {
-    if (evt.keyCode === window.utils.Enter) {
+    if (evt.keyCode === window.utils.EnterKeycode) {
       openPopup();
     }
   };
@@ -57,7 +56,7 @@
   };
 
   var onSetupCloseKeydown = function (evt) {
-    if (evt.keyCode === window.utils.Enter) {
+    if (evt.keyCode === window.utils.EnterKeycode) {
       closePopup();
     }
   };

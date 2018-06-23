@@ -1,13 +1,14 @@
 'use strict';
+
 (function () {
+  var TOP_EDGE = 0;
   var userDialog = document.querySelector('.setup');
   var onDialogMousemove = userDialog.querySelector('.upload');
-  var TOP_EDGE = 0;
-  var LEFT_EDGE = userDialog.offsetWidth * 2;
+  var leftEdge = userDialog.offsetWidth * 2;
 
   onDialogMousemove.addEventListener('mousedown', function (evt) {
-    var RIGHT_EDGE = document.body.offsetWidth - userDialog.offsetWidth / 2;
-    var BOTTOM_EDGE = document.body.offsetHeight - userDialog.offsetHeight / 2;
+    var rightEdge = document.body.offsetWidth - userDialog.offsetWidth / 2;
+    var bottomEdge = document.body.offsetHeight - userDialog.offsetHeight / 2;
     evt.preventDefault();
 
     var startCoords = {
@@ -37,14 +38,14 @@
 
       if (currentY < TOP_EDGE) {
         currentY = 0;
-      } else if (currentY > BOTTOM_EDGE) {
-        currentY = BOTTOM_EDGE;
+      } else if (currentY > bottomEdge) {
+        currentY = bottomEdge;
       }
 
-      if (currentX < LEFT_EDGE) {
+      if (currentX < leftEdge) {
         currentX = 0;
-      } else if (currentX > RIGHT_EDGE) {
-        currentX = RIGHT_EDGE;
+      } else if (currentX > rightEdge) {
+        currentX = rightEdge;
       }
 
       userDialog.style.top = currentY + 'px';

@@ -2,9 +2,7 @@
 
 (function () {
   var userDialog = document.querySelector('.setup');
-
   var similarListElement = userDialog.querySelector('.setup-similar-list');
-
   var similarWizardTemplate = document.querySelector('#similar-wizard-template')
     .content
     .querySelector('.setup-similar-item');
@@ -72,42 +70,3 @@
 
   window.onItemClick = onItemClick;
 })();
-// // var shopDialog = userDialog.querySelector('.setup-artifacts-shop');
-// var cellShop = document.querySelector('.setup-artifacts');
-// var draggedItem;
-
-// shopDialog.addEventListener('dragstart', function (evt) {
-//   if (evt.target.closest('img')) {
-//     evt.dataTransfer.effectAllowed = 'move';
-//     evt.dataTransfer.setData('text/plain', evt.target.getAttribute('alt'));
-//     evt.dataTransfer.setDragImage(evt.target, 30, 25);
-//     draggedItem = evt.target;
-//   }
-// });
-
-// cellShop.addEventListener('dragover', function (evt) {
-//   evt.preventDefault();
-//   return false;
-// });
-
-// cellShop.addEventListener('drop', function (evt) {
-//   evt.target.style.opacity = '1';
-//   evt.target.appendChild(draggedItem);
-//   if (evt.stopPropagation) {
-//     evt.stopPropagation();
-//   }
-//   return false;
-// });
-
-// cellShop.addEventListener('dragenter', function (evt) {
-//   evt.target.style.opacity = '1';
-//   evt.preventDefault();
-//   return true;
-// });
-
-// cellShop.addEventListener('dragleave', function (evt) {
-//   evt.target.style.opacity = '0.5';
-//   evt.preventDefault();
-// });
-
-
