@@ -11,8 +11,8 @@
   var NUMBER_OF_WIZARDS = 4;
 
   window.utils = {
-    EscKeycode: ESC_KEYCODE,
-    EnterKeycode: ENTER_KEYCODE,
+    escKeycode: ESC_KEYCODE,
+    enterKeycode: ENTER_KEYCODE,
     wizarsNames: WIZARD_NAMES,
     wizardsSurnames: WIZARD_SURNAMES,
     coatColors: COAT_COLORS,

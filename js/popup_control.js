@@ -8,7 +8,7 @@
   var userNameInput = setup.querySelector('.setup-user-name');
 
   var onPopupEscPress = function (evt) {
-    if (evt.keyCode === window.utils.EscKeycode && !evt.target.matches('[name="username"]')) {
+    if (evt.keyCode === window.utils.escKeycode && !evt.target.matches('[name="username"]')) {
       closePopup();
     }
   };
@@ -43,7 +43,7 @@
   };
 
   var onSetupKeydown = function (evt) {
-    if (evt.keyCode === window.utils.EnterKeycode) {
+    if (evt.keyCode === window.utils.enterKeycode) {
       openPopup();
     }
   };
@@ -56,8 +56,14 @@
   };
 
   var onSetupCloseKeydown = function (evt) {
-    if (evt.keyCode === window.utils.EnterKeycode) {
+    if (evt.keyCode === window.utils.enterKeycode) {
       closePopup();
     }
   };
+
+  var form = setup.querySelector('.setup-wizard-form');
+  form.addEventListener('submit', function (evt) {
+    window.upload(new FormData(form), closePopup, window.errorHandler);
+    evt.preventDefault();
+  });
 })();
