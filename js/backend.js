@@ -2,10 +2,12 @@
 
 (function () {
   var URL_LOAD = 'https://js.dump.academy/code-and-magick/data';
-  var TIMEOUT = 1;
+  var URL_UPLOAD = 'https://js.dump.academy/code-and-magick';
+  var TIMEOUT = 1000;
   var SUCCESS_STATUS = 200;
 
-  window.load = function (onSuccess, onError) {
+
+  var backendFunction = function (onSuccess, onError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
 
@@ -24,23 +26,42 @@
     });
 
     xhr.timeout = TIMEOUT;
+    return xhr;
+  };
+
+  var upload = function (data, onSuccess, onError) {
+    var xhr = backendFunction(onSuccess, onError);
+
+    xhr.open('POST', URL_UPLOAD);
+    xhr.send(data);
+  };
+
+  var load = function (onSuccess, onError) {
+    var xhr = backendFunction(onSuccess, onError);
 
     xhr.open('GET', URL_LOAD);
     xhr.send();
   };
 
-  var URL_UPLOAD = 'https://js.dump.academy/code-and-magick';
+  var errorHandler = function (errorMessage) {
+    var node = document.createElement('div');
+    node.style = 'z-index: 100; padding: 50px 10px; margin: 0 auto; text-align: center; vertical-align: middle; background-color: #da641a; border: 15px dashed white';
+    node.style.position = 'absolute';
+    node.style.left = '190px';
+    node.style.right = '150px';
+    node.style.top = '100px';
+    node.style.bottom = '300px';
+    node.style.fontSize = '30px';
+    node.classList.add('error-message');
 
-  window.upload = function (data, onSuccess) {
-    var xhr = new XMLHttpRequest();
-    xhr.responseType = 'json';
+    node.textContent = 'Что-то пошло не так ¯\_(ツ)_/¯ ' + errorMessage;
+    document.body.insertAdjacentElement('afterbegin', node);
+  };
 
-    xhr.addEventListener('load', function () {
-      onSuccess(xhr.response);
-    });
-
-    xhr.open('POST', URL_UPLOAD);
-    xhr.send(data);
+  window.backend = {
+    loadFunction: load,
+    uploadFunction: upload,
+    error: errorHandler
   };
 
 })();

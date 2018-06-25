@@ -38,7 +38,11 @@
   var fragment = document.createDocumentFragment();
   var successHandler = function (wizards) {
     for (var i = 0; i < 4; i++) {
-      fragment.appendChild(renderWizard(wizards[getRandom(0, 16)]));
+      var randomIndex = getRandom(1, wizards.length);
+      var randomWizard = wizards[randomIndex];
+      wizards.splice(randomIndex, 1);
+
+      fragment.appendChild(renderWizard(randomWizard));
     }
     similarListElement.appendChild(fragment);
 
@@ -72,21 +76,6 @@
 
   window.onItemClick = onItemClick;
 
-  var errorHandler = function (errorMessage) {
-    var node = document.createElement('div');
-    node.style = 'z-index: 100; padding: 50px 10px; margin: 0 auto; text-align: center; vertical-align: middle; background-color: #da641a; border: 15px dashed white';
-    node.style.position = 'absolute';
-    node.style.left = '190px';
-    node.style.right = '150px';
-    node.style.top = '100px';
-    node.style.bottom = '300px';
-    node.style.fontSize = '30px';
-    node.classList.add('error-message');
-
-    node.textContent = 'Что-то пошло не так ¯\_(ツ)_/¯ ' + errorMessage;
-    document.body.insertAdjacentElement('afterbegin', node);
-  };
-
   var onErrorEsq = function (evt) {
     var error = document.querySelector('.error-message');
     if (evt.keyCode === window.utils.escKeycode) {
@@ -95,5 +84,5 @@
   };
 
   document.addEventListener('keydown', onErrorEsq);
-  window.load(successHandler, errorHandler);
+  window.backend.loadFunction(successHandler, window.backend.error);
 })();

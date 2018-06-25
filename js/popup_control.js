@@ -23,6 +23,7 @@
     setupClose.addEventListener('keydown', onSetupCloseKeydown);
     userNameInput.addEventListener('invalid', window.inputName.onUserNameInputInvalid);
     userNameInput.addEventListener('input', window.inputName.onUserNameInput);
+    form.addEventListener('submit', onSubmitClick);
   };
 
   var closePopup = function () {
@@ -36,6 +37,7 @@
     setupClose.removeEventListener('keydown', onSetupCloseKeydown);
     userNameInput.removeEventListener('invalid', window.inputName.onUserNameInputInvalid);
     userNameInput.removeEventListener('input', window.inputName.onUserNameInput);
+    form.removeEventListener('submit', onSubmitClick);
   };
 
   var onSetupClick = function () {
@@ -62,8 +64,9 @@
   };
 
   var form = setup.querySelector('.setup-wizard-form');
-  form.addEventListener('submit', function (evt) {
-    window.upload(new FormData(form), closePopup, window.errorHandler);
+
+  var onSubmitClick = function (evt) {
+    window.backend.uploadFunction(new FormData(form), closePopup, window.backend.error);
     evt.preventDefault();
-  });
+  };
 })();
