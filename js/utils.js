@@ -10,6 +10,21 @@
   var FIREBALL_COLORS = ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848'];
   var NUMBER_OF_WIZARDS = 4;
 
+  var errorHandler = function (errorMessage) {
+    var node = document.createElement('div');
+    node.style = 'z-index: 100; padding: 50px 10px; margin: 0 auto; text-align: center; vertical-align: middle; background-color: #da641a; border: 15px dashed white';
+    node.style.position = 'absolute';
+    node.style.left = '190px';
+    node.style.right = '150px';
+    node.style.top = '100px';
+    node.style.bottom = '300px';
+    node.style.fontSize = '30px';
+    node.classList.add('error-message');
+
+    node.textContent = 'Что-то пошло не так ¯\_(ツ)_/¯ ' + errorMessage;
+    document.body.insertAdjacentElement('afterbegin', node);
+  };
+
   window.utils = {
     escKeycode: ESC_KEYCODE,
     enterKeycode: ENTER_KEYCODE,
@@ -19,6 +34,7 @@
     eyesColors: EYES_COLORS,
     fireballColors: FIREBALL_COLORS,
     numberOfWizards: NUMBER_OF_WIZARDS,
+    error: errorHandler,
     getShuffle: function (array) {
       var counter = array.length;
       while (counter > 0) {

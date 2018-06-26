@@ -66,7 +66,7 @@
   var form = setup.querySelector('.setup-wizard-form');
 
   var onSubmitClick = function (evt) {
-    window.backend.uploadFunction(new FormData(form), closePopup, window.backend.error);
+    window.backend.uploadFunction(new FormData(form), closePopup, window.utils.error);
     evt.preventDefault();
   };
 })();

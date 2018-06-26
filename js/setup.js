@@ -7,7 +7,6 @@
     .content
     .querySelector('.setup-similar-item');
 
-  // var wizards = [];
   var getRandom = function (min, max) {
     return Math.floor(Math.random() * (max + 1 - min) + min);
   };
@@ -16,14 +15,6 @@
     var item = Math.floor(Math.random() * array.length);
     return array[item];
   };
-
-  // for (var j = 0; j < window.utils.numberOfWizards; j++) {
-  //   wizards[j] = {
-  //     name: window.utils.wizarsNames[getRandom(0, window.utils.wizarsNames.length - 1)] + ' ' + window.utils.wizardsSurnames[getRandom(0, window.utils.wizardsSurnames.length - 1)],
-  //     coatColor: window.utils.coatColors[getRandom(0, window.utils.coatColors.length - 1)],
-  //     eyesColor: window.utils.eyesColors[getRandom(0, window.utils.eyesColors.length - 1)],
-  //   };
-  // }
 
   var renderWizard = function (wizard) {
     var wizardElement = similarWizardTemplate.cloneNode(true);
@@ -84,5 +75,5 @@
   };
 
   document.addEventListener('keydown', onErrorEsq);
-  window.backend.loadFunction(successHandler, window.backend.error);
+  window.backend.loadFunction(successHandler, window.utils.error);
 })();
