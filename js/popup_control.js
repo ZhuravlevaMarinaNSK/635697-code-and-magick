@@ -8,7 +8,7 @@
   var userNameInput = setup.querySelector('.setup-user-name');
 
   var onPopupEscPress = function (evt) {
-    if (evt.keyCode === window.utils.EscKeycode && !evt.target.matches('[name="username"]')) {
+    if (evt.keyCode === window.utils.escKeycode && !evt.target.matches('[name="username"]')) {
       closePopup();
     }
   };
@@ -23,6 +23,7 @@
     setupClose.addEventListener('keydown', onSetupCloseKeydown);
     userNameInput.addEventListener('invalid', window.inputName.onUserNameInputInvalid);
     userNameInput.addEventListener('input', window.inputName.onUserNameInput);
+    form.addEventListener('submit', onSubmitClick);
   };
 
   var closePopup = function () {
@@ -36,6 +37,7 @@
     setupClose.removeEventListener('keydown', onSetupCloseKeydown);
     userNameInput.removeEventListener('invalid', window.inputName.onUserNameInputInvalid);
     userNameInput.removeEventListener('input', window.inputName.onUserNameInput);
+    form.removeEventListener('submit', onSubmitClick);
   };
 
   var onSetupClick = function () {
@@ -43,7 +45,7 @@
   };
 
   var onSetupKeydown = function (evt) {
-    if (evt.keyCode === window.utils.EnterKeycode) {
+    if (evt.keyCode === window.utils.enterKeycode) {
       openPopup();
     }
   };
@@ -56,8 +58,15 @@
   };
 
   var onSetupCloseKeydown = function (evt) {
-    if (evt.keyCode === window.utils.EnterKeycode) {
+    if (evt.keyCode === window.utils.enterKeycode) {
       closePopup();
     }
+  };
+
+  var form = setup.querySelector('.setup-wizard-form');
+
+  var onSubmitClick = function (evt) {
+    window.backend.uploadFunction(new FormData(form), closePopup, window.utils.error);
+    evt.preventDefault();
   };
 })();
