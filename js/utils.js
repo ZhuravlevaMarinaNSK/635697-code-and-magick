@@ -9,6 +9,7 @@
   var EYES_COLORS = ['black', 'red', 'blue', 'yellow', 'green'];
   var FIREBALL_COLORS = ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848'];
   var NUMBER_OF_WIZARDS = 4;
+  var DEBOUNCE_INTERVAL = 300;
 
   var errorHandler = function (errorMessage) {
     var node = document.createElement('div');
@@ -25,6 +26,25 @@
     document.body.insertAdjacentElement('afterbegin', node);
   };
 
+  var getRandomItem = function (array) {
+    var item = Math.floor(Math.random() * array.length);
+    return array[item];
+  };
+
+  var debounce = function (fun) {
+    var lastTimeout = null;
+
+    return function () {
+      var args = arguments;
+      if (lastTimeout) {
+        window.clearTimeout(lastTimeout);
+      }
+      lastTimeout = window.setTimeout(function () {
+        fun.apply(null, args);
+      }, DEBOUNCE_INTERVAL);
+    };
+  };
+
   window.utils = {
     escKeycode: ESC_KEYCODE,
     enterKeycode: ENTER_KEYCODE,
@@ -35,6 +55,8 @@
     fireballColors: FIREBALL_COLORS,
     numberOfWizards: NUMBER_OF_WIZARDS,
     error: errorHandler,
+    getRandomItem: getRandomItem,
+    debounce: debounce,
     getShuffle: function (array) {
       var counter = array.length;
       while (counter > 0) {

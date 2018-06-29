@@ -43,7 +43,6 @@
     xhr.send();
   };
 
-
   window.backend = {
     loadFunction: load,
     uploadFunction: upload

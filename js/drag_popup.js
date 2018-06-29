@@ -145,4 +145,5 @@
     userDialog.style.left = beginX;
     userDialog.style.top = beginY;
   };
+  window.backend.loadFunction(window.wizard.successHandler, window.utils.error);
 })();
