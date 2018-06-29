@@ -3,11 +3,10 @@
 (function () {
   var coatColor;
   var eyesColor;
-
-  var setup = document.querySelector('.setup');
-  var setupPlayer = setup.querySelector('.setup-player');
+  var wizardsLoaded = [];
 
   var getRank = function (wizard) {
+
     var rank = 0;
     if (wizard.colorCoat === coatColor) {
       rank += 2;
@@ -28,28 +27,30 @@
     }
   };
 
-  var setColor = function (identificator, colorArray, el, isFireball) {
-    var color = window.utils.getRandomItem(colorArray);
-    setupPlayer.querySelector(identificator).value = color;
-    if (!isFireball) {
-      el.style.fill = color;
-    } else {
-      el.style.backgroundColor = color;
-    }
+  var updateWizards = function () {
+    window.wizard.similarWizard(wizardsLoaded.sort(function (left, right) {
+      var rankDiff = getRank(right) - getRank(left);
+      if (rankDiff === 0) {
+        rankDiff = rankDiff = namesComparator(left.name, right.name);
+      }
+      return rankDiff;
+    }));
   };
 
-  var getItemsRank = function (right, left) {
-    var rankDiff = getRank(right) - getRank(left);
-    if (rankDiff === 0) {
-      rankDiff = namesComparator(left.name, right.name);
-    }
-    return rankDiff;
+  window.wizard.wizard.onEyesChange = window.utils.debounce(function (color) {
+    eyesColor = color;
+    updateWizards();
+  });
+
+  window.wizard.wizard.onCoatChange = window.utils.debounce(function (color) {
+    coatColor = color;
+    updateWizards();
+  });
+
+  var successHandler = function (wizards) {
+    wizardsLoaded = wizards;
+    updateWizards();
   };
 
-  window.similar = {
-    setColor: setColor,
-    getItemsRank: getItemsRank,
-    eyesColor: eyesColor,
-    coatColor: coatColor
-  };
+  window.backend.loadFunction(successHandler, window.utils.error);
 })();

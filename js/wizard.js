@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-
   var similarWizardTemplate = document.querySelector('#similar-wizard-template')
     .content
     .querySelector('.setup-similar-item');
@@ -32,35 +31,43 @@
   };
 
 
-  var updateWizards = function () {
-    similarWizard(wizardsLoaded.sort(function (left, right) {
-      window.similar.getItemsRank(right, left);
-    }));
-  };
-
   var element = document.querySelector('.setup-fireball-wrap');
   var onItemClick = function (evt) {
     var target = evt.target;
     if (target.classList.contains('wizard-coat')) {
-      window.similar.setColor('[name="coat-color"]', window.utils.coatColors, target);
-      window.similar.coatColor = setupPlayer.querySelector('[name="coat-color"]').value;
-      updateWizards();
+      setColor('[name="coat-color"]', window.utils.coatColors, target);
     } else if (target.classList.contains('wizard-eyes')) {
-      window.similar.setColor('[name="eyes-color"]', window.utils.eyesColors, target);
-      window.similar.eyesColor = setupPlayer.querySelector('[name="eyes-color"]').value;
-      updateWizards();
+      setColor('[name="eyes-color"]', window.utils.eyesColors, target);
     } else if (target.classList.contains('setup-fireball')) {
-      window.similar.setColor('[name="fireball-color"]', window.utils.fireballColors, element, true);
+      setColor('[name="fireball-color"]', window.utils.fireballColors, element, true);
     }
   };
 
-  var wizardsLoaded = [];
-  setupPlayer.addEventListener('click', onItemClick);
-
-  var successHandler = function (wizards) {
-    wizardsLoaded = wizards;
-    updateWizards();
+  var wizard = {
+    onEyesChange: function (color) {
+      return color;
+    },
+    onCoatChange: function (color) {
+      return color;
+    }
   };
+
+  var setColor = function (identificator, colorArray, el, isFireball) {
+    var color = window.utils.getRandomItem(colorArray);
+    setupPlayer.querySelector(identificator).value = color;
+    if (!isFireball) {
+      el.style.fill = color;
+    } else {
+      el.style.backgroundColor = color;
+    }
+    if (el.classList.contains('wizard-coat')) {
+      wizard.onCoatChange(color);
+    } else if (el.classList.contains('wizard-eyes')) {
+      wizard.onEyesChange(color);
+    }
+  };
+
+  setupPlayer.addEventListener('click', onItemClick);
 
   var onErrorEsq = function (evt) {
     var error = document.querySelector('.error-message');
@@ -72,7 +79,8 @@
   document.addEventListener('keydown', onErrorEsq);
 
   window.wizard = {
-    successHandler: successHandler
+    similarWizard: similarWizard,
+    wizard: wizard
   };
 
 })();
