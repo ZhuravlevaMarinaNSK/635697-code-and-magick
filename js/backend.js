@@ -3,7 +3,7 @@
 (function () {
   var URL_LOAD = 'https://js.dump.academy/code-and-magick/data';
   var URL_UPLOAD = 'https://js.dump.academy/code-and-magick';
-  var TIMEOUT = 10000;
+  var TIMEOUT = 100000;
   var SUCCESS_STATUS = 200;
 
 
@@ -42,7 +42,6 @@
     xhr.open('GET', URL_LOAD);
     xhr.send();
   };
-
 
   window.backend = {
     loadFunction: load,

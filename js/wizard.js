@@ -1,21 +1,13 @@
 'use strict';
 
 (function () {
-  var userDialog = document.querySelector('.setup');
-  var similarListElement = userDialog.querySelector('.setup-similar-list');
   var similarWizardTemplate = document.querySelector('#similar-wizard-template')
     .content
     .querySelector('.setup-similar-item');
 
-  var getRandom = function (min, max) {
-    return Math.floor(Math.random() * (max + 1 - min) + min);
-  };
-
-  var getRandomItem = function (array) {
-    var item = Math.floor(Math.random() * array.length);
-    return array[item];
-  };
-
+  var userDialog = document.querySelector('.setup');
+  var similarListElement = userDialog.querySelector('.setup-similar-list');
+  var setupPlayer = userDialog.querySelector('.setup-player');
   var renderWizard = function (wizard) {
     var wizardElement = similarWizardTemplate.cloneNode(true);
 
@@ -27,33 +19,19 @@
   };
 
   var fragment = document.createDocumentFragment();
-  var successHandler = function (wizards) {
+  var similarWizard = function (data) {
+    similarListElement.innerHTML = '';
     for (var i = 0; i < 4; i++) {
-      var randomIndex = getRandom(1, wizards.length);
-      var randomWizard = wizards[randomIndex];
-      wizards.splice(randomIndex, 1);
-
-      fragment.appendChild(renderWizard(randomWizard));
+      fragment.appendChild(renderWizard(data[i]));
     }
     similarListElement.appendChild(fragment);
 
     userDialog.querySelector('.setup-similar').classList.remove('hidden');
+    return similarWizard;
   };
 
-  var setup = document.querySelector('.setup');
-  var setupPlayer = setup.querySelector('.setup-player');
+
   var element = document.querySelector('.setup-fireball-wrap');
-
-  var setColor = function (identificator, colorArray, el, isFireball) {
-    var color = getRandomItem(colorArray);
-    setupPlayer.querySelector(identificator).value = color;
-    if (!isFireball) {
-      el.style.fill = color;
-    } else {
-      el.style.backgroundColor = color;
-    }
-  };
-
   var onItemClick = function (evt) {
     var target = evt.target;
     if (target.classList.contains('wizard-coat')) {
@@ -65,7 +43,31 @@
     }
   };
 
-  window.onItemClick = onItemClick;
+  var wizard = {
+    onEyesChange: function (color) {
+      return color;
+    },
+    onCoatChange: function (color) {
+      return color;
+    }
+  };
+
+  var setColor = function (identificator, colorArray, el, isFireball) {
+    var color = window.utils.getRandomItem(colorArray);
+    setupPlayer.querySelector(identificator).value = color;
+    if (!isFireball) {
+      el.style.fill = color;
+    } else {
+      el.style.backgroundColor = color;
+    }
+    if (el.classList.contains('wizard-coat')) {
+      wizard.onCoatChange(color);
+    } else if (el.classList.contains('wizard-eyes')) {
+      wizard.onEyesChange(color);
+    }
+  };
+
+  setupPlayer.addEventListener('click', onItemClick);
 
   var onErrorEsq = function (evt) {
     var error = document.querySelector('.error-message');
@@ -75,5 +77,10 @@
   };
 
   document.addEventListener('keydown', onErrorEsq);
-  window.backend.loadFunction(successHandler, window.utils.error);
+
+  window.wizard = {
+    similarWizard: similarWizard,
+    wizard: wizard
+  };
+
 })();

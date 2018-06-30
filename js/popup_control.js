@@ -69,4 +69,5 @@
     window.backend.uploadFunction(new FormData(form), closePopup, window.utils.error);
     evt.preventDefault();
   };
+
 })();
