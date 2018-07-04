@@ -6,50 +6,70 @@
   var onDialogMousemove = userDialog.querySelector('.upload');
   var leftEdge = userDialog.offsetWidth * 2;
 
+  var Rect = function (left, top, right, bottom) {
+    this.left = left;
+    this.top = top;
+    this.right = right;
+    this.bottom = bottom;
+  };
+
+  var Coordinate = function (x, y, constraints) {
+    this.x = x;
+    this.y = y;
+    this._constraints = constraints;
+  };
+
+  Coordinate.prototype.setX = function (x) {
+    if (x >= this._constraints.left && x <= this._constraints.right) {
+      this.x = x;
+    }
+  };
+
+  Coordinate.prototype.setY = function (y) {
+    if (y <= this._constraints.top) {
+      this.y = 0;
+    } else if (y > this._constraints.bottom) {
+      this.y = this._constraints.bottom;
+    }
+  };
+
   onDialogMousemove.addEventListener('mousedown', function (evt) {
     var rightEdge = document.body.offsetWidth - userDialog.offsetWidth / 2;
     var bottomEdge = document.body.offsetHeight - userDialog.offsetHeight / 2;
     evt.preventDefault();
 
-    var startCoords = {
-      x: evt.clientX,
-      y: evt.clientY
-    };
-
+    var startCoords = new Coordinate(evt.clientX, evt.clientY);
     var dragged = false;
 
     var onMouseMove = function (moveEvt) {
       moveEvt.preventDefault();
       dragged = true;
 
-      var shift = {
-        x: startCoords.x - moveEvt.clientX,
-        y: startCoords.y - moveEvt.clientY
-      };
+      var shift = new Coordinate(startCoords.x - moveEvt.clientX, startCoords.y - moveEvt.clientY);
 
-      startCoords = {
-        x: moveEvt.clientX,
-        y: moveEvt.clientY
-      };
+      startCoords.x = moveEvt.clientX;
+      startCoords.y = moveEvt.clientY;
 
       var currentX = userDialog.offsetLeft - shift.x;
       var currentY = userDialog.offsetTop - shift.y;
 
+      var currentCoords = new Coordinate(currentX, currentY, new Rect(leftEdge, TOP_EDGE, rightEdge, bottomEdge));
 
-      if (currentY < TOP_EDGE) {
-        currentY = 0;
-      } else if (currentY > bottomEdge) {
-        currentY = bottomEdge;
-      }
+      // if (currentY < TOP_EDGE) {
+      //   currentY = 0;
+      // } else if (currentY > bottomEdge) {
+      //   currentY = bottomEdge;
+      // }
 
-      if (currentX < leftEdge) {
-        currentX = 0;
-      } else if (currentX > rightEdge) {
-        currentX = rightEdge;
-      }
-
-      userDialog.style.top = currentY + 'px';
-      userDialog.style.left = currentX + 'px';
+      // if (currentX < leftEdge) {
+      //   currentX = 0;
+      // } else if (currentX > rightEdge) {
+      //   currentX = rightEdge;
+      // }
+      // userDialog.style.top = currentCoords.y + 'px';
+      // userDialog.style.left = currentCoords.x + 'px';
+      userDialog.style.top = currentCoords.y + 'px';
+      userDialog.style.left = currentCoords.x + 'px';
     };
 
     var onMouseUp = function (upEvt) {
