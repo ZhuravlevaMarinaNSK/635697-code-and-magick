@@ -20,56 +20,53 @@
   };
 
   Coordinate.prototype.setX = function (x) {
-    if (x >= this._constraints.left && x <= this._constraints.right) {
-      this.x = x;
+    if (x <= this._constraints.left) {
+      this.x = this._constraints.left;
+    } else if (x >= this._constraints.right) {
+      this.x = this._constraints.right;
     }
   };
 
   Coordinate.prototype.setY = function (y) {
     if (y <= this._constraints.top) {
-      this.y = 0;
-    } else if (y > this._constraints.bottom) {
+      this.y = this._constraints.top;
+    } else if (y >= this._constraints.bottom) {
       this.y = this._constraints.bottom;
     }
   };
 
   onDialogMousemove.addEventListener('mousedown', function (evt) {
     var rightEdge = document.body.offsetWidth - userDialog.offsetWidth / 2;
-    var bottomEdge = document.body.offsetHeight - userDialog.offsetHeight / 2;
+    var bottomEdge = window.innerHeight - userDialog.offsetHeight / 2;
     evt.preventDefault();
 
-    var startCoords = new Coordinate(evt.clientX, evt.clientY);
+    var startCoords = {
+      x: evt.clientX,
+      y: evt.clientY
+    };
+
     var dragged = false;
 
     var onMouseMove = function (moveEvt) {
       moveEvt.preventDefault();
       dragged = true;
 
-      var shift = new Coordinate(startCoords.x - moveEvt.clientX, startCoords.y - moveEvt.clientY);
+      var shift = {
+        x: startCoords.x - moveEvt.clientX,
+        y: startCoords.y - moveEvt.clientY
+      };
 
       startCoords.x = moveEvt.clientX;
       startCoords.y = moveEvt.clientY;
+      var currentCoords = new Coordinate(userDialog.offsetLeft - shift.x, userDialog.offsetTop - shift.y, new Rect(leftEdge, TOP_EDGE, rightEdge, bottomEdge));
+      // var currentX = userDialog.offsetLeft - shift.x;
+      // var currentY = userDialog.offsetTop - shift.y;
 
-      var currentX = userDialog.offsetLeft - shift.x;
-      var currentY = userDialog.offsetTop - shift.y;
+      currentCoords.setX(currentCoords.x);
+      currentCoords.setY(currentCoords.y);
 
-      var currentCoords = new Coordinate(currentX, currentY, new Rect(leftEdge, TOP_EDGE, rightEdge, bottomEdge));
-
-      // if (currentY < TOP_EDGE) {
-      //   currentY = 0;
-      // } else if (currentY > bottomEdge) {
-      //   currentY = bottomEdge;
-      // }
-
-      // if (currentX < leftEdge) {
-      //   currentX = 0;
-      // } else if (currentX > rightEdge) {
-      //   currentX = rightEdge;
-      // }
-      // userDialog.style.top = currentCoords.y + 'px';
-      // userDialog.style.left = currentCoords.x + 'px';
-      userDialog.style.top = currentCoords.y + 'px';
       userDialog.style.left = currentCoords.x + 'px';
+      userDialog.style.top = currentCoords.y + 'px';
     };
 
     var onMouseUp = function (upEvt) {
@@ -92,15 +89,16 @@
     document.addEventListener('mouseup', onMouseUp);
   });
 
-
   var shopDialog = userDialog.querySelector('.setup-artifacts-cell');
   var star = shopDialog.querySelector('img');
   var playersBag = userDialog.querySelector('.setup-artifacts');
   var playersCell = playersBag.querySelector('.setup-artifacts-cell');
+  var startCoords = {};
 
-  star.addEventListener('mousemov', function (evt) {
+  userDialog.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
-    var startCoords = {
+
+    startCoords = {
       x: evt.clientX,
       y: evt.clientY
     };
@@ -132,7 +130,6 @@
       star.style.display = 'none';
       var elem = document.elementFromPoint(event.clientX, event.clientY);
       star.style.display = 'block';
-
       if (elem === playersCell) {
         upEvt.preventDefault();
 
@@ -146,16 +143,11 @@
           };
           star.addEventListener('click', onClickPreventDefault);
         }
-      } else {
-        star.style.position = 'static';
-        document.removeEventListener('mousemove', onMouseMove);
-        document.removeEventListener('mouseup', onMouseUp);
       }
+
+      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener('mouseup', onMouseUp);
     };
-
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
-
   });
 
   var beginX = userDialog.style.left;
