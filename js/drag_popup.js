@@ -1,10 +1,8 @@
 'use strict';
 
 (function () {
-  var TOP_EDGE = 0;
   var userDialog = document.querySelector('.setup');
   var onDialogMousemove = userDialog.querySelector('.upload');
-  var leftEdge = userDialog.offsetWidth * 2;
 
   var Rect = function (left, top, right, bottom) {
     this.left = left;
@@ -36,8 +34,10 @@
   };
 
   onDialogMousemove.addEventListener('mousedown', function (evt) {
+    var TOP_EDGE = 0;
     var rightEdge = document.body.offsetWidth - userDialog.offsetWidth / 2;
-    var bottomEdge = window.innerHeight - userDialog.offsetHeight / 2;
+    var leftEdge = userDialog.offsetWidth / 2;
+    var bottomEdge = window.innerHeight - userDialog.offsetHeight;
     evt.preventDefault();
 
     var startCoords = {
@@ -59,8 +59,6 @@
       startCoords.x = moveEvt.clientX;
       startCoords.y = moveEvt.clientY;
       var currentCoords = new Coordinate(userDialog.offsetLeft - shift.x, userDialog.offsetTop - shift.y, new Rect(leftEdge, TOP_EDGE, rightEdge, bottomEdge));
-      // var currentX = userDialog.offsetLeft - shift.x;
-      // var currentY = userDialog.offsetTop - shift.y;
 
       currentCoords.setX(currentCoords.x);
       currentCoords.setY(currentCoords.y);
